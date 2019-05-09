@@ -60,7 +60,7 @@ public class EmployeeJPATest {
     public void should_return_employee_name_when_employee_salary_is_max_and_given_company_id_() throws Exception {
         //3.找出一个薪资最高且公司ID是1的雇员以及该雇员的name
         Employee expectedEmployee = new Employee(1,"xiaohong",19,"female",1,7000);
-        String actualName = null;
+        String actualName = employeeRepository.getNameWhoseSalayIsHighestInGivenCompany(1);
         assertThat(actualName).isEqualTo(expectedEmployee.getName());
     }
 
@@ -68,7 +68,7 @@ public class EmployeeJPATest {
     public void should_return_employee_list_when_input_page_request() throws Exception {
         //4.实现对Employee的分页查询，每页两条数据，一共三页数。
         //注意：PageRequest的构造方法已经弃用了代替的是PageRequest.of,并且最后一个参数代表按照table中的哪一个字段排序
-        Page<Employee> EmployeePage = null;
+        Page<Employee> EmployeePage = employeeRepository.divideIntoPages(PageRequest.of(0, 2));
         assertThat(EmployeePage.getTotalPages()).isEqualTo(3);
     }
 
