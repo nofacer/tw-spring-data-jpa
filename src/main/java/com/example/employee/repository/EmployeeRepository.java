@@ -4,9 +4,10 @@ import com.example.employee.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
+import javax.transaction.Transactional;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     //以下所有的*都代表变量
@@ -28,9 +29,15 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
             countQuery = "select count(*) from Employee",
             nativeQuery = true)
     Page<Employee> divideIntoPages(Pageable pageable);
+
     //5.查找**的所在的公司的公司名称
+    @Query(value = "select c.companyName from Employee e  left join  Company c on e.companyId=c.id where e.name=?1", nativeQuery = true)
+    String getCompanyNameOfGivenEmployeeName(String name);
 
     //6.将*的名字改成*,输出这次修改影响的行数
-
+    @Modifying
+    @Query(value = "update Employee set name=?2 where name=?1",nativeQuery = true)
+    @Transactional
+    int updateName(String name,String newName);
     //7.删除姓名是*的employee
 }
