@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
 import javax.transaction.Transactional;
+
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     //以下所有的*都代表变量
@@ -36,8 +38,13 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     //6.将*的名字改成*,输出这次修改影响的行数
     @Modifying
-    @Query(value = "update Employee set name=?2 where name=?1",nativeQuery = true)
     @Transactional
-    int updateName(String name,String newName);
+    @Query(value = "update Employee set name=?2 where name=?1", nativeQuery = true)
+    int updateName(String name, String newName);
+
     //7.删除姓名是*的employee
+    @Modifying
+    @Transactional
+    @Query(value = "delete from Employee where name=?1", nativeQuery = true)
+    void dropByName(String name);
 }
